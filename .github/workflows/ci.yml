@@ -1,0 +1,141 @@
+---
+name: Rust CI
+
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - 'v*'
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup cargo
+        run: rustup update stable && rustup default stable
+      - name: Cache Cargo vendored dependencies
+        id: cache-cargo-vendor
+        uses: actions/cache@v5
+        with:
+          path: |
+            vendor/
+            .cargo/config.toml
+          key: cargo-vendor-${{ hashFiles('Cargo.lock', '.cargo/config.toml') }}
+          enableCrossOsArchive: true
+
+      - if: ${{ steps.cache-cargo-vendor.outputs.cache-hit != 'true' }}
+        name: Fetch and vendor Cargo dependencies
+        run: cargo vendor --verbose --locked >> .cargo/config.toml
+
+  lint:
+    needs: vendor
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Restore Cargo vendored dependencies cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            vendor/
+            .cargo/config.toml
+          key: cargo-vendor-${{ hashFiles('Cargo.lock', '.cargo/config.toml') }}
+          enableCrossOsArchive: true
+          fail-on-cache-miss: true
+      - name: Install mise
+        uses: jdx/mise-action@v4
+      - name: Setup cargo
+        run: rustup update stable && rustup default stable
+      - name: Install dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libdbus-1-dev pkg-config
+
+      - name: Check Clippy warnings
+        run: mise run clippy --verbose --offline --locked
+
+  test:
+    needs: vendor
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Restore Cargo vendored dependencies cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            vendor/
+            .cargo/config.toml
+          key: cargo-vendor-${{ hashFiles('Cargo.lock', '.cargo/config.toml') }}
+          enableCrossOsArchive: true
+          fail-on-cache-miss: true
+      - name: Install mise
+        uses: jdx/mise-action@v4
+      - name: Setup cargo
+        run: rustup update stable && rustup default stable
+      - name: Install dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libdbus-1-dev pkg-config
+
+      - name: Build and run tests
+        run: mise run test --verbose --offline --locked
+
+  document:
+    needs: vendor
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Restore Cargo vendored dependencies cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            vendor/
+            .cargo/config.toml
+          key: cargo-vendor-${{ hashFiles('Cargo.lock', '.cargo/config.toml') }}
+          enableCrossOsArchive: true
+          fail-on-cache-miss: true
+      - name: Install mise
+        uses: jdx/mise-action@v4
+      - name: Setup cargo
+        run: rustup update stable && rustup default stable
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libdbus-1-dev pkg-config
+
+      - name: Build documentation
+        run: mise run doc --verbose --offline --locked
+
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install mise
+        uses: jdx/mise-action@v4
+      - name: Setup cargo
+        run: rustup update stable && rustup default stable
+
+      - name: Check correct Rustfmt formatting
+        run: mise run fmt --verbose --check

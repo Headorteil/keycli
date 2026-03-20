@@ -1,0 +1,85 @@
+[settings]
+windows_default_inline_shell_args = "bash -c -o errexit"
+
+[tasks.check]
+description = "Runs `cargo check` with some default flags."
+run = "cargo check --all-targets --all-features $usage_args"
+alias = ["c"]
+usage = 'arg "[args]" var=#true'
+
+[tasks.build]
+description = "Runs `cargo build` with some default flags."
+run = "cargo build --all-targets --all-features $usage_args"
+alias = ["b"]
+usage = 'arg "[args]" var=#true'
+
+[tasks.build-release]
+description = "Runs `cargo build --release` with some default flags."
+run = "mise run build --release $usage_args"
+alias = ["br"]
+usage = 'arg "[args]" var=#true'
+
+[tasks.run]
+description = "Runs `cargo run` with some default flags."
+run = "cargo run --all-features $usage_args"
+alias = ["r"]
+usage = 'arg "[args]" var=#true'
+
+[tasks.run-release]
+description = "Runs `cargo run --release` with some default flags."
+run = "mise run run --release $usage_args"
+alias = ["rr"]
+usage = 'arg "[args]" var=#true'
+
+[tasks.test]
+description = "Runs `cargo test` with some default flags."
+run = "cargo test --all-targets --all-features $usage_args"
+alias = ["t"]
+usage = 'arg "[args]" var=#true'
+
+[tasks.clippy]
+description = "Runs `cargo clippy` with some default flags."
+run = "cargo clippy --all-targets --all-features  $usage_args -- -D warnings"
+alias = ["cl"]
+usage = 'arg "[args]" var=#true'
+
+[tasks.fmt]
+description = "Runs `cargo fmt` with some default flags."
+run = "cargo fmt --all $usage_args"
+alias = ["f"]
+usage = 'arg "[args]" var=#true'
+
+[tasks.fmt-check]
+description = "Runs `cargo fmt --check` with some default flags."
+run = "mise run fmt --check $usage_args"
+alias = ["fc"]
+usage = 'arg "[args]" var=#true'
+
+[tasks.doc]
+description = "Runs `cargo doc` with some default flags."
+run = "cargo doc --bins --examples --all-features --document-private-items $usage_args"
+alias = ["d"]
+usage = 'arg "[args]" var=#true'
+
+[tasks.update-readme]
+description = "Update the readme with trycmd."
+run = "TRYCMD=overwrite cargo test --test outputs -- validate_outputs"
+alias = ["ur"]
+
+[tasks.update-cargo]
+description = "Runs `cargo update` with some default flags."
+run = "cargo update --recursive $usage_args"
+alias = ["uc"]
+usage = 'arg "[args]" var=#true'
+
+[tasks.check-all]
+description = "Check everything."
+depends = ["build", "test", "clippy", "doc", "fmt-check"]
+alias = ["ca"]
+
+[tasks.release]
+confirm = "Are you sure you want to publish a release?"
+description = "Runs a Cargo update, all checks and `cargo publish."
+depends = ["update-cargo", "check-all"]
+run = "cargo publish"
+alias = ["p"]

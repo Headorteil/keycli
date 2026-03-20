@@ -1,0 +1,56 @@
+# tests/cmd/help.toml
+bin.name = "keycli"
+args = ["--help"]
+status.code = 0
+stdout = """
+A env manager which stores your secrets in your OS keyring
+
+Usage: keycli[EXE] [OPTIONS] <COMMAND>
+
+Commands:
+  load        Load secrets to the environment
+  unload      Unload the environment
+  save        Save secrets to the keyring
+  clear       Clear the keyring
+  exec        Execute a command with env vars
+  shell       Execute a shell with env vars
+  init        Create a .keycli.conf from secrets and / or a keycli.tpl
+  alias       Generate shell aliases
+  completion  Generate shell completion scripts
+  help        Print this message or the help of the given subcommand(s)
+
+Options:
+  -v, --verbose  Turn on verbose output [env: KEYCLI_VERBOSE=]
+  -h, --help     Print help
+  -V, --version  Print version
+
+Examples:
+
+# Create a .keycli.conf from a keycli.tpl and populate your keyring
+keycli init
+
+# Create a .keycli.conf from scratch and populate your keyring
+keycli init -a my_app -s PASS -s PASS2 -s PASS3:another_app
+
+# Run a shell with declared env vars
+keycli shell
+
+# Load env vars
+eval $(keycli load) # Or keycli-load if you installed the alias
+
+# Unload env vars
+eval $(keycli unload) # Or keycli-unload if you installed the alias
+
+# Save vars without .keycli.conf file
+keycli save -a custom_app -s ZOZO -s ZAZA
+
+# Load vars without .keycli.conf file
+keycli load -a custom_app -s ZOZO -s ZAZA
+
+# Install completions and aliases
+keycli alias zsh >> ~/.zshrc
+keycli completion zsh > ~/.zfunc/_keycli
+keycli completion zsh keycli-load > ~/.zfunc/_keycli-load
+keycli completion zsh keycli-unload > ~/.zfunc/_keycli-unload
+"""
+stderr = ""
