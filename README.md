@@ -1,6 +1,50 @@
 <div align="center">
     <h1>Keycli</h1>
     <h3>An environment manager which stores your secrets in your OS keyring</h3>
+    <a href="https://github.com/Headorteil/keycli/releases/latest">
+        <img
+            alt="GitHub release (latest by date including pre-releases)"
+            src="https://img.shields.io/github/v/release/Headorteil/keycli?style=for-the-badge&include_prereleases"
+        />
+    </a>
+    <a href="https://github.com/Headorteil/keycli/releases/latest">
+        <img
+            alt="GitHub (Pre-)Release Date"
+            src="https://img.shields.io/github/release-date-pre/Headorteil/keycli?style=for-the-badge&display_date=published_at"
+        />
+    </a>
+    <a href="https://crates.io/crates/keycli">
+        <img
+            alt="Crates.io version"
+            src="https://img.shields.io/crates/v/keycli?style=for-the-badge"
+        />
+    </a>
+    <br/>
+    <a href="https://github.com/Headorteil/keycli/actions">
+        <img
+            alt="GitHub Workflow Status"
+            src="https://img.shields.io/github/actions/workflow/status/Headorteil/keycli/ci.yml?style=for-the-badge&branch=main"
+        />
+    </a>
+    <a href="https://crates.io/crates/keycli#user-content-bottom">
+        <img
+            alt="Crates.io downloads"
+            src="https://img.shields.io/crates/d/keycli?style=for-the-badge"
+        />
+    </a>
+    <br/>
+    <a href="https://github.com/Headorteil/keycli/pulse">
+        <img
+            alt="Maintainance status: active"
+            src="https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg?style=for-the-badge"
+        />
+    </a>
+    <a href="https://github.com/Headorteil/keycli/blob/main/LICENSE">
+        <img
+            alt="License"
+            src="https://img.shields.io/github/license/Headorteil/keycli?style=for-the-badge"
+        />
+    </a>
 </div>
 
 # Summary
