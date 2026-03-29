@@ -67,8 +67,14 @@ yay -S keycli
 
 ## Aliases
 Install keycli-load and keycli-unload shell functions to be able to get your env vars directly in your current shell
+### Zsh
 ```bash
 keycli alias zsh >> ~/.zshrc
+```
+
+### Bash
+```bash
+keycli alias bash >> ~/.bashrc
 ```
 
 ## Completion
