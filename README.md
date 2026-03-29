@@ -55,7 +55,36 @@ It enables you to store secrets from per project config files and / or cli flags
 For this tool to work properly, you need to have an already working OS keyring.
 
 # Install
-`cargo install keycli`
+## From cargo
+```bash
+cargo install keycli
+```
+
+## From the AUR
+```bash
+yay -S keycli
+```
+
+## Aliases
+Install keycli-load and keycli-unload shell functions to be able to get your env vars directly in your current shell
+```bash
+keycli alias zsh >> ~/.zshrc
+```
+
+## Completion
+### Zsh
+```bash
+keycli completion zsh > ~/.zfunc/_keycli
+keycli completion zsh keycli-load > ~/.zfunc/_keycli-load
+keycli completion zsh keycli-unload > ~/.zfunc/_keycli-unload
+```
+
+### Bash
+```bash
+keycli completion zsh > ~/.zfunc/_keycli
+keycli completion zsh keycli-load > ~/.zfunc/_keycli-load
+keycli completion zsh keycli-unload > ~/.zfunc/_keycli-unload
+```
 
 # Usage
 ```console
