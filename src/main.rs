@@ -95,6 +95,20 @@ pub fn run(cli: Cli) -> Result<()> {
             print!("{env_content}");
             Ok(())
         }
+        Commands::List { all_common } => {
+            let parsed_secrets = secrets::parse_secrets(
+                all_common.common.app_name,
+                all_common.common.extra_secrets,
+                all_common.config,
+                all_common.common.secrets,
+                true,
+                all_common.check_tpl,
+                true,
+            )?;
+            let var_list = commands::list(parsed_secrets)?;
+            print!("{var_list}");
+            Ok(())
+        }
         Commands::Save { all_common, save } => {
             let parsed_secrets = secrets::parse_secrets(
                 all_common.common.app_name.clone(),

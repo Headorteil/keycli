@@ -8,8 +8,9 @@ A env manager which stores your secrets in your OS keyring
 Usage: keycli[EXE] [OPTIONS] <COMMAND>
 
 Commands:
-  load        Load secrets to the environment
-  unload      Unload the environment
+  load        Print sourcable shell script to load secrets to the environment. Used by keycli-load
+  unload      Print sourcable shell script to unload secrets from the environment. Used by keycli-unload
+  list        List all env vars managed by keycli with the current options and args
   save        Save secrets to the keyring
   clear       Clear the keyring
   exec        Execute a command with env vars

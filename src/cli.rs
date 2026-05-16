@@ -130,7 +130,7 @@ pub enum AliasCommand {
 
 #[derive(Subcommand)]
 pub enum Commands {
-    /// Load secrets to the environment
+    /// Print sourcable shell script to load secrets to the environment. Used by keycli-load
     Load {
         #[command(flatten)]
         all_common: AllCommonOptions,
@@ -139,8 +139,14 @@ pub enum Commands {
         load: LoadArgs,
     },
 
-    /// Unload the environment
+    /// Print sourcable shell script to unload secrets from the environment. Used by keycli-unload
     Unload {
+        #[command(flatten)]
+        all_common: AllCommonOptions,
+    },
+
+    /// List all env vars managed by keycli with the current options and args
+    List {
         #[command(flatten)]
         all_common: AllCommonOptions,
     },

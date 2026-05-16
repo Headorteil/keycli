@@ -107,6 +107,17 @@ pub fn unload(secrets: Vec<Secret>) -> Result<String> {
     Ok(result)
 }
 
+/// List all the environment variables managed by keycli with the current
+/// command line
+pub fn list(secrets: Vec<Secret>) -> Result<String> {
+    let mut result = String::new();
+    for secret in secrets {
+        write!(&mut result, "{}{LINE_ENDING}", secret.env)?;
+        log::debug!("Processed {}", secret.env);
+    }
+    Ok(result)
+}
+
 /// Exec a binary while loading the environment variables specified in a secret list
 pub fn exec(secrets: Vec<Secret>, binary: &str, args: Vec<String>) -> Result<()> {
     let env_map = secrets::build_env(secrets)?;
