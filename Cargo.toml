@@ -4,6 +4,7 @@ version = "0.1.1"
 edition = "2024"
 description = "An environment manager which stores your secrets in your OS keyring"
 license = "MIT"
+repository = "https://github.com/Headorteil/keycli"
 
 [dependencies]
 anyhow = "1.0.102"
