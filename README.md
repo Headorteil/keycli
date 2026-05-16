@@ -194,6 +194,9 @@ eval $(keycli load)
 
 > mise.toml
 ```toml
+[tools]
+"cargo:keycli" = "latest"
+
 [env]
 _.source = "./load_env.sh"
 ```
