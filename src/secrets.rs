@@ -2,9 +2,11 @@ use crate::config::{check_template, search_config};
 use crate::consts::{LINE_ENDING, TOOL_NAME};
 use anyhow::{Context, Result, anyhow};
 use heck::{ToLowerCamelCase, ToShoutySnakeCase};
+use regex::Regex;
 use std::collections::HashMap;
 use std::fmt::Write;
 use std::path::PathBuf;
+use std::sync::LazyLock;
 use std::{env, fs};
 
 use keyring::Entry;
@@ -50,6 +52,11 @@ impl Secret {
             }
             _ => return Err(anyhow!(r#"Too many ":" in secret "{secret}""#)),
         };
+        if !is_valid_env_var_name(&env) {
+            return Err(anyhow!(
+                r#""{env}" is not a valid environment variable name"#
+            ));
+        };
         Ok(Secret {
             service,
             username,
@@ -62,7 +69,7 @@ impl Secret {
         let printable_service = self
             .service
             .strip_prefix(&format!("{TOOL_NAME}/"))
-            .with_context(|| format!("Expected prefix '{TOOL_NAME}/' in '{}'", self.service))?;
+            .with_context(|| format!(r#"Expected prefix "{TOOL_NAME}/" in "{}""#, self.service))?;
         Ok(format!(
             "{}:{printable_service}/{}",
             self.env, self.username
@@ -124,7 +131,7 @@ pub fn split_secret(opt_app_name: Option<&str>, secret: &str) -> Result<(String,
         [username] => {
             let app_name = opt_app_name.ok_or_else(|| anyhow!("App name must be defined"))?;
             if app_name.contains(':') || app_name.contains('/') {
-                return Err(anyhow::anyhow!("app-name cannot contain ':' or '/'"));
+                return Err(anyhow::anyhow!(r#"app-name cannot contain ":" or "/""#));
             };
 
             Ok((
@@ -151,13 +158,13 @@ pub fn parse_secrets(
     if arg_secrets.is_empty() {
         let content = match opt_config_file {
             Some(ref config_file) => fs::read_to_string(config_file)
-                .with_context(|| format!("Failed to read file: '{}'", config_file.display()))?,
+                .with_context(|| format!(r#"Failed to read file: "{}""#, config_file.display()))?,
             None => {
                 if do_search_config {
                     match search_config() {
                         Some(ref config_file) => {
                             fs::read_to_string(config_file).with_context(|| {
-                                format!("Failed to read file: '{}'", config_file.display())
+                                format!(r#"Failed to read file: "{}""#, config_file.display())
                             })?
                         }
                         None => String::new(),
@@ -214,6 +221,14 @@ pub fn build_env(secrets: Vec<Secret>) -> Result<HashMap<String, String>> {
         env_map.insert(secret.env.clone(), secret.get()?);
     }
     Ok(env_map)
+}
+
+static ENV_VAR_REGEX: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^[a-zA-Z_][a-zA-Z0-9_]*$").unwrap());
+
+/// Check is a string is a valid shell environment variable name
+pub fn is_valid_env_var_name(name: &str) -> bool {
+    ENV_VAR_REGEX.is_match(name)
 }
 
 #[cfg(test)]
@@ -320,5 +335,14 @@ mod tests {
             init_str(secrets).unwrap(),
             format!("ZOUZOU:zozo/zaza{LINE_ENDING}ZONZON:zuzu/zaza{LINE_ENDING}")
         );
+    }
+
+    #[test]
+    fn test_is_valid_env_var_name() {
+        let name = "Zo_zo";
+        assert!(is_valid_env_var_name(name));
+
+        let name = "1Zo_zo";
+        assert!(!is_valid_env_var_name(name));
     }
 }

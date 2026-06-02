@@ -24,11 +24,11 @@ pub fn check_template(config: &str) -> Result<()> {
     };
     log::debug!("Found template reference in the config: {path} {sha}");
 
-    let content = fs::read(path).with_context(|| format!("Failed to read template file {path}, you can run with '--no-check-template' or remove the keycli comments in the config file"))?;
+    let content = fs::read(path).with_context(|| format!(r#"Failed to read template file {path}, you can run with "--no-check-template" or remove the keycli comments in the config file"#))?;
     let hash = hex::encode(Sha256::digest(&content));
     if hash != sha {
         return Err(anyhow!(
-            "Associated template file was changed, you can update your config by running 'keycli init' while being in the dir it lays, run with '--no-check-template' or remove the keycli comments in the config file"
+            r#"Associated template file was changed, you can update your config by running "keycli init" while being in the dir it lays, run with "--no-check-template" or remove the keycli comments in the config file"#
         ));
     }
     Ok(())

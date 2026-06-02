@@ -6,6 +6,8 @@ use crate::secrets::Secret;
 use anyhow::{Context, Result};
 use dialoguer::{Confirm, Input, Password};
 use sha2::{Digest, Sha256};
+use shell_escape::escape;
+use std::borrow::Cow;
 use std::fmt::Write;
 use std::path::PathBuf;
 use std::process::Command;
@@ -35,7 +37,7 @@ pub fn save(
             {
                 let value = Password::new()
                     .with_prompt(format!(
-                        "Input the value of '{}'",
+                        r#"Input the value of "{}""#,
                         new_secret.to_keycli_str()?
                     ))
                     .interact()?;
@@ -90,7 +92,8 @@ pub fn clear(secrets: Vec<Secret>, interactive: bool) -> Result<()> {
 pub fn load(secrets: Vec<Secret>) -> Result<String> {
     let mut result = String::new();
     for (env, password) in secrets::build_env(secrets)? {
-        write!(&mut result, "export {env}={password}{LINE_ENDING}")?;
+        let escaped = escape(Cow::Borrowed(&password));
+        write!(&mut result, "export {env}={escaped}{LINE_ENDING}")?;
         log::debug!("Processed {env}");
     }
     Ok(result)
@@ -146,7 +149,7 @@ pub fn init(secrets: Vec<Secret>, template: Option<PathBuf>) -> Result<String> {
 /// Prompt for a confirmation and allow an edit in the case of a non confirmation
 fn confirm_or_edit(prompt: &str, value: &str) -> Result<String> {
     let confirmed = Confirm::new()
-        .with_prompt(format!("{prompt}: '{value}'?"))
+        .with_prompt(format!(r#"{prompt}: "{value}"?"#))
         .default(true)
         .interact()?;
 
