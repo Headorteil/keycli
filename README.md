@@ -180,38 +180,16 @@ PASS=zaza
 ```
 
 ## Mise
-> keycli.tpl
-```raw
-PASS:app/pass
-KEY:app/key
-```
-
-> load_env.sh
-```bash
-#!/bin/bash
-eval $(keycli load)
-```
-
 > mise.toml
 ```toml
 [tools]
 "cargo:keycli" = "latest"
 
-[env]
-_.source = "./load_env.sh"
-```
+[plugins]
+keycli = "https://github.com/Headorteil/keycli-mise"
 
-```bash
-$ keycli init
-The secret full path is: 'PASS:app/pass'? yes
-Input the value of 'PASS:app/pass': [hidden]
-INFO PASS was saved to keycli/app/pass
-The secret full path is: 'KEY:app/key'? yes
-Input the value of 'KEY:app/key': [hidden]
-INFO KEY was saved to keycli/app/key
-$ mise env | rg 'PASS|KEY'
-KEY=zozo
-PASS=zaza
+[env]
+_.keycli = { tools = true }
 ```
 
 # Good to know
