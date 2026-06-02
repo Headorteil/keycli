@@ -12,6 +12,7 @@ use std::{env, fs};
 use keyring::Entry;
 
 /// Main struct, handles all the logic of the keycli secrets
+#[derive(Debug)]
 pub struct Secret {
     pub service: String,
     pub username: String,

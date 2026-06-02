@@ -213,3 +213,8 @@ $ mise env | rg 'PASS|KEY'
 KEY=zozo
 PASS=zaza
 ```
+
+# Good to know
+If an environment variable is defined multiple time, the last definition always takes precedence over others.
+
+The variables defined with `--extra-secrets` take precedence over ones defined in the config file.

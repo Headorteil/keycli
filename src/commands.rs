@@ -103,9 +103,9 @@ pub fn load(secrets: Vec<Secret>) -> Result<String> {
 /// environment variables
 pub fn unload(secrets: Vec<Secret>) -> Result<String> {
     let mut result = String::new();
-    for secret in secrets {
-        write!(&mut result, "unset {}{LINE_ENDING}", secret.env)?;
-        log::debug!("Processed {}", secret.env);
+    for (env, _) in secrets::build_env(secrets)? {
+        write!(&mut result, "unset {}{LINE_ENDING}", env)?;
+        log::debug!("Processed {}", env);
     }
     Ok(result)
 }
@@ -114,9 +114,9 @@ pub fn unload(secrets: Vec<Secret>) -> Result<String> {
 /// command line
 pub fn list(secrets: Vec<Secret>) -> Result<String> {
     let mut result = String::new();
-    for secret in secrets {
-        write!(&mut result, "{}{LINE_ENDING}", secret.env)?;
-        log::debug!("Processed {}", secret.env);
+    for (env, _) in secrets::build_env(secrets)? {
+        write!(&mut result, "{}{LINE_ENDING}", env)?;
+        log::debug!("Processed {}", env);
     }
     Ok(result)
 }
