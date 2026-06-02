@@ -67,7 +67,11 @@ pub fn main() {
 /// Runs the right subcommand
 pub fn run(cli: Cli) -> Result<()> {
     match cli.command {
-        Commands::Load { all_common, load } => {
+        Commands::Load {
+            all_common,
+            load,
+            output_format,
+        } => {
             let parsed_secrets = secrets::parse_secrets(
                 all_common.common.app_name,
                 all_common.common.extra_secrets,
@@ -77,7 +81,7 @@ pub fn run(cli: Cli) -> Result<()> {
                 all_common.check_tpl,
                 true,
             )?;
-            let env_content = commands::load(parsed_secrets)?;
+            let env_content = commands::load(parsed_secrets, output_format)?;
             print!("{env_content}");
             Ok(())
         }

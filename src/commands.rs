@@ -1,5 +1,6 @@
 //! All the commands to manipulate the environment and the keyring
 
+use crate::cli::OutputFormat;
 use crate::consts::{LINE_ENDING, PATH_HEADER, SHA_HEADER};
 use crate::secrets;
 use crate::secrets::Secret;
@@ -89,14 +90,20 @@ pub fn clear(secrets: Vec<Secret>, interactive: bool) -> Result<()> {
 
 /// Build a sourcable string from a secret list which would load the desired
 /// secrets in the environment
-pub fn load(secrets: Vec<Secret>) -> Result<String> {
+pub fn load(secrets: Vec<Secret>, output_format: OutputFormat) -> Result<String> {
     let mut result = String::new();
-    for (env, password) in secrets::build_env(secrets)? {
-        let escaped = escape(Cow::Borrowed(&password));
-        write!(&mut result, "export {env}={escaped}{LINE_ENDING}")?;
-        log::debug!("Processed {env}");
+    let env = secrets::build_env(secrets)?;
+    match output_format {
+        OutputFormat::ShellScript => {
+            for (env, password) in env {
+                let escaped = escape(Cow::Borrowed(&password));
+                write!(&mut result, "export {env}={escaped}{LINE_ENDING}")?;
+                log::debug!("Processed {env}");
+            }
+            Ok(result)
+        }
+        OutputFormat::Json => Ok(serde_json::to_string(&env)?),
     }
-    Ok(result)
 }
 
 /// Build a sourcable string from a secret list which would unload the desired

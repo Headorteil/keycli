@@ -128,6 +128,15 @@ pub enum AliasCommand {
     Unload,
 }
 
+#[derive(ValueEnum, Clone)]
+pub enum OutputFormat {
+    #[value(name = "shell-script")]
+    ShellScript,
+
+    #[value(name = "json")]
+    Json,
+}
+
 #[derive(Subcommand)]
 pub enum Commands {
     /// Print sourcable shell script to load secrets to the environment. Used by keycli-load
@@ -137,6 +146,10 @@ pub enum Commands {
 
         #[command(flatten)]
         load: LoadArgs,
+
+        /// Format of the output
+        #[arg(short = 'f', long = "output-format", env = env_var!("OUTPUT_FORMAT"), default_value = "shell-script")]
+        output_format: OutputFormat,
     },
 
     /// Print sourcable shell script to unload secrets from the environment. Used by keycli-unload
