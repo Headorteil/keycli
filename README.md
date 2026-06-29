@@ -48,11 +48,11 @@
 </div>
 
 # Summary
-`keycli` is designed to replace all secrets which are stored in .env files everywhere on your system.
+`keycli` is designed to get rid of all your `.env` files, which store plaintext secrets on disk.
 
-It enables you to store secrets from per project config files and / or cli flags to your OS keyring and to load them into your environment.
+It enables you to store secrets in your OS keyring, manage per-project env vars, keep them in sync when variable requirements change, and load/unload the secrets into your environment.
 
-For this tool to work properly, you need to have an already working OS keyring.
+For this tool to work properly, you need an already-working OS keyring like `gnome-keyring` or `kwallet`.
 
 # Install
 ## From cargo
