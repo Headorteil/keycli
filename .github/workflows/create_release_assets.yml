@@ -9,6 +9,9 @@ on:
 permissions:
   contents: write
 
+env:
+  MISE_WINDOWS_DEFAULT_INLINE_SHELL_ARGS: "bash -c"
+
 jobs:
   create-release:
     runs-on: ubuntu-latest
