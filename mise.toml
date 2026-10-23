@@ -1,6 +1,3 @@
-[settings]
-windows_default_inline_shell_args = "bash -c -o errexit"
-
 [tasks.check]
 description = "Runs `cargo check` with some default flags."
 run = "cargo check --all-targets --all-features $usage_args"

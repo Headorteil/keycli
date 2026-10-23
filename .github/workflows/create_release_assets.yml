@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 env:
-  MISE_WINDOWS_DEFAULT_INLINE_SHELL_ARGS: "bash -c"
+  MISE_WINDOWS_DEFAULT_INLINE_SHELL_ARGS: "bash -c -o errexit"
 
 jobs:
   create-release:
