@@ -87,9 +87,9 @@ keycli completion zsh keycli-unload > ~/.zfunc/_keycli-unload
 
 ### Bash
 ```bash
-keycli completion zsh > ~/.zfunc/_keycli
-keycli completion zsh keycli-load > ~/.zfunc/_keycli-load
-keycli completion zsh keycli-unload > ~/.zfunc/_keycli-unload
+keycli completion bash > ~/.local/share/bash-completion/completions/_keycli
+keycli completion bash keycli-load > ~/.local/share/bash-completion/completions/_keycli-load
+keycli completion bash keycli-unload > ~/.local/share/bash-completion/completions/_keycli-unload
 ```
 
 # Usage
